@@ -34,12 +34,12 @@
             this.textBox_extList = new System.Windows.Forms.TextBox();
             this.contextMenuStrip_extList = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ToolStripMenuItem_saveExt = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_editExt = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBox_deep = new System.Windows.Forms.CheckBox();
             this.button_count = new System.Windows.Forms.Button();
             this.folderBrowserDialog_find = new System.Windows.Forms.FolderBrowserDialog();
             this.comboBox_extTemplate = new System.Windows.Forms.ComboBox();
             this.linkLabel_maker = new System.Windows.Forms.LinkLabel();
-            this.ToolStripMenuItem_editExt = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip_extList.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -79,6 +79,13 @@
             this.ToolStripMenuItem_saveExt.Size = new System.Drawing.Size(214, 26);
             this.ToolStripMenuItem_saveExt.Text = "템플릿 목록에 추가";
             this.ToolStripMenuItem_saveExt.Click += new System.EventHandler(this.ToolStripMenuItem_saveExt_Click);
+            // 
+            // ToolStripMenuItem_editExt
+            // 
+            this.ToolStripMenuItem_editExt.Name = "ToolStripMenuItem_editExt";
+            this.ToolStripMenuItem_editExt.Size = new System.Drawing.Size(214, 26);
+            this.ToolStripMenuItem_editExt.Text = "현재 템플릿 수정";
+            this.ToolStripMenuItem_editExt.Click += new System.EventHandler(this.ToolStripMenuItem_editExt_Click);
             // 
             // checkBox_deep
             // 
@@ -128,13 +135,6 @@
             this.linkLabel_maker.TabStop = true;
             this.linkLabel_maker.Text = "http://blog.naver.com/neurowhai";
             this.linkLabel_maker.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel_maker_LinkClicked);
-            // 
-            // ToolStripMenuItem_editExt
-            // 
-            this.ToolStripMenuItem_editExt.Name = "ToolStripMenuItem_editExt";
-            this.ToolStripMenuItem_editExt.Size = new System.Drawing.Size(214, 26);
-            this.ToolStripMenuItem_editExt.Text = "현재 템플릿 수정";
-            this.ToolStripMenuItem_editExt.Click += new System.EventHandler(this.ToolStripMenuItem_editExt_Click);
             // 
             // Form_Main
             // 

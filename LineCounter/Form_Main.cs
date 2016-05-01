@@ -99,26 +99,42 @@ namespace LineCounter
             }
         }
 
-        protected decimal CountLine(string folder, string pattern, bool deeper)
+        protected decimal CountLine(string folder, string pattern, bool deeper, HashSet<string> checkedList)
         {
             decimal line = 0;
 
 
+            // 하위 폴더까지 검색할지 옵션
+            SearchOption searchOption = ((deeper) ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+
+
             // folder내에 존재하는 파일들에 대해서 반복
-            foreach (string file in Directory.EnumerateFiles(folder, pattern))
+            foreach (string file in Directory.EnumerateFiles(folder, pattern, searchOption))
             {
                 try
                 {
-                    using (StreamReader sr = new StreamReader(new FileStream(file, FileMode.Open)))
+                    // 이미 확인한 파일이 아니라면
+                    if (!checkedList.Contains(file))
                     {
-                        // 파일 끝까지 반복
-                        while (!sr.EndOfStream)
+                        // 파일 열기
+                        using (StreamReader sr = new StreamReader(new FileStream(file, FileMode.Open)))
                         {
-                            // 개행 문자를 만나면
-                            if (sr.Read() == '\n')
+                            // 확인목록에 추가
+                            checkedList.Add(file);
+
+
+                            // 마지막 줄은 개행문자가 없으므로 미리 카운트
+                            ++line;
+
+                            // 파일 끝까지 반복
+                            while (!sr.EndOfStream)
                             {
-                                // 카운트 증가
-                                ++line;
+                                // 개행 문자를 만나면
+                                if (sr.Read() == '\n')
+                                {
+                                    // 카운트 증가
+                                    ++line;
+                                }
                             }
                         }
                     }
@@ -126,17 +142,6 @@ namespace LineCounter
                 catch (FileNotFoundException)
                 {
                     continue;
-                }
-            }
-
-
-            // 하위 폴더까지 탐색해야한다면
-            if (deeper)
-            {
-                // 하위 폴더에 대해 재귀적으로 탐색
-                foreach (string innerFolder in Directory.EnumerateDirectories(folder))
-                {
-                    line += CountLine(innerFolder, pattern, deeper);
                 }
             }
 
@@ -171,24 +176,35 @@ namespace LineCounter
 
         private void button_count_Click(object sender, EventArgs e)
         {
-            // 폴더를 선택하였으면
-            if (this.folderBrowserDialog_find.ShowDialog() == DialogResult.OK)
+            // 패턴 목록이 존재하면
+            if (this.textBox_extList.TextLength > 0)
             {
-                // 해당 폴더 경로을 얻고
-                string path = this.folderBrowserDialog_find.SelectedPath;
-
-
-                decimal totalLine = 0;
-
-                // 탐색 시작
-                foreach (string ext in GetExtBoxEnumerable())
+                // 폴더를 선택하였으면
+                if (this.folderBrowserDialog_find.ShowDialog() == DialogResult.OK)
                 {
-                    totalLine += CountLine(path, ext, this.checkBox_deep.Checked);
+                    // 해당 폴더 경로을 얻고
+                    string path = this.folderBrowserDialog_find.SelectedPath;
+
+
+                    HashSet<string> checkedList = new HashSet<string>();
+                    decimal totalLine = 0;
+
+                    // 탐색 시작
+                    foreach (string ext in GetExtBoxEnumerable())
+                    {
+                        totalLine += CountLine(path, ext, this.checkBox_deep.Checked, checkedList);
+                    }
+
+
+                    // 결과 표시
+                    MessageBox.Show(totalLine.ToString(), "Line count", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
+            }
+            else
+            {
+                MessageBox.Show("패턴 목록을 작성해주세요.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-
-                // 결과 표시
-                MessageBox.Show(totalLine.ToString(), "Line count", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.textBox_extList.Focus();
             }
         }
 
@@ -196,7 +212,7 @@ namespace LineCounter
         {
             this.linkLabel_maker.LinkVisited = true;
 
-            System.Diagnostics.Process.Start(this.linkLabel_maker.Text);
+            System.Diagnostics.Process.Start("http://blog.naver.com/neurowhai/220697843695");
         }
 
         private void comboBox_extTemplate_SelectedIndexChanged(object sender, EventArgs e)
